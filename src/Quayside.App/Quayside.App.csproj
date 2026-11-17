@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>Quayside</AssemblyName>
+    <RootNamespace>Quayside.App</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <ProjectReference Include="..\Quayside.Excel\Quayside.Excel.csproj" />
+    <ProjectReference Include="..\Quayside.Data.Sqlite\Quayside.Data.Sqlite.csproj" />
+    <ProjectReference Include="..\Quayside.Data.Postgres\Quayside.Data.Postgres.csproj" />
+  </ItemGroup>
+</Project>

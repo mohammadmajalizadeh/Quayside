@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{95661A2F-1169-4F85-968C-E8B56DE3D844}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.App", "src\Quayside.App\Quayside.App.csproj", "{23861D08-29A2-443B-8D21-B6B2CF30538D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.Data.Postgres", "src\Quayside.Data.Postgres\Quayside.Data.Postgres.csproj", "{DB52BCB0-BF99-424A-BFF3-E2BE4A2C031A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.Data.Sqlite", "src\Quayside.Data.Sqlite\Quayside.Data.Sqlite.csproj", "{4081F161-8C1C-4AFB-B52A-8705203F617C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.Data", "src\Quayside.Data\Quayside.Data.csproj", "{9591DBAF-8804-4581-B6E2-FE0CFF19A75E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.Domain", "src\Quayside.Domain\Quayside.Domain.csproj", "{6A4804AB-6E35-483E-929D-88F61125D122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.Excel", "src\Quayside.Excel\Quayside.Excel.csproj", "{68CDAFD5-8152-4915-B62E-831500B60B90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DA80A3D8-1B90-4653-AE6A-764D55AFE55C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quayside.Tests", "tests\Quayside.Tests\Quayside.Tests.csproj", "{7354D208-E034-4C26-9598-9132C61980EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23861D08-29A2-443B-8D21-B6B2CF30538D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23861D08-29A2-443B-8D21-B6B2CF30538D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23861D08-29A2-443B-8D21-B6B2CF30538D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23861D08-29A2-443B-8D21-B6B2CF30538D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB52BCB0-BF99-424A-BFF3-E2BE4A2C031A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB52BCB0-BF99-424A-BFF3-E2BE4A2C031A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB52BCB0-BF99-424A-BFF3-E2BE4A2C031A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB52BCB0-BF99-424A-BFF3-E2BE4A2C031A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4081F161-8C1C-4AFB-B52A-8705203F617C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4081F161-8C1C-4AFB-B52A-8705203F617C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4081F161-8C1C-4AFB-B52A-8705203F617C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4081F161-8C1C-4AFB-B52A-8705203F617C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9591DBAF-8804-4581-B6E2-FE0CFF19A75E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9591DBAF-8804-4581-B6E2-FE0CFF19A75E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9591DBAF-8804-4581-B6E2-FE0CFF19A75E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9591DBAF-8804-4581-B6E2-FE0CFF19A75E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A4804AB-6E35-483E-929D-88F61125D122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A4804AB-6E35-483E-929D-88F61125D122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A4804AB-6E35-483E-929D-88F61125D122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A4804AB-6E35-483E-929D-88F61125D122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68CDAFD5-8152-4915-B62E-831500B60B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CDAFD5-8152-4915-B62E-831500B60B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CDAFD5-8152-4915-B62E-831500B60B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68CDAFD5-8152-4915-B62E-831500B60B90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7354D208-E034-4C26-9598-9132C61980EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7354D208-E034-4C26-9598-9132C61980EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7354D208-E034-4C26-9598-9132C61980EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7354D208-E034-4C26-9598-9132C61980EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{23861D08-29A2-443B-8D21-B6B2CF30538D} = {95661A2F-1169-4F85-968C-E8B56DE3D844}
+		{DB52BCB0-BF99-424A-BFF3-E2BE4A2C031A} = {95661A2F-1169-4F85-968C-E8B56DE3D844}
+		{4081F161-8C1C-4AFB-B52A-8705203F617C} = {95661A2F-1169-4F85-968C-E8B56DE3D844}
+		{9591DBAF-8804-4581-B6E2-FE0CFF19A75E} = {95661A2F-1169-4F85-968C-E8B56DE3D844}
+		{6A4804AB-6E35-483E-929D-88F61125D122} = {95661A2F-1169-4F85-968C-E8B56DE3D844}
+		{68CDAFD5-8152-4915-B62E-831500B60B90} = {95661A2F-1169-4F85-968C-E8B56DE3D844}
+		{7354D208-E034-4C26-9598-9132C61980EB} = {DA80A3D8-1B90-4653-AE6A-764D55AFE55C}
+	EndGlobalSection
+EndGlobal

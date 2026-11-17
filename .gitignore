@@ -37,3 +37,5 @@ appsettings.Local.json
 /artifacts/
 /publish/
 installer/Output/
+docs/INVENTORY.md
+docs/LICENSE_FINDINGS.md
