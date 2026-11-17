@@ -8,6 +8,7 @@
     <RootNamespace>Quayside.App</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Using Include="System.IO" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <ProjectReference Include="..\Quayside.Excel\Quayside.Excel.csproj" />
     <ProjectReference Include="..\Quayside.Data.Sqlite\Quayside.Data.Sqlite.csproj" />

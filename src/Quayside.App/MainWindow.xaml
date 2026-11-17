@@ -1,6 +1,270 @@
 <Window x:Class="Quayside.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Quayside" Height="720" Width="1200">
-    <TextBlock Margin="24" Text="Quayside" FontSize="24" />
+        Title="Quayside" Height="760" Width="1280" WindowStartupLocation="CenterScreen">
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+            <TextBlock Text="Quayside" FontSize="20" FontWeight="SemiBold" Margin="0,0,16,0" />
+            <Button Content="Refresh" Command="{Binding RefreshAll}" />
+        </StackPanel>
+        <TabControl>
+            <!-- Containers -->
+            <TabItem Header="Containers" DataContext="{Binding Containers}">
+                <DockPanel Margin="6">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Label}" Text="Search" />
+                        <TextBox Width="200" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Content="Find" Command="{Binding RefreshCommand}" Margin="6,0" />
+                        <Button Content="Export container master…" Command="{Binding ExportCommand}" />
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Items}" />
+                </DockPanel>
+            </TabItem>
+
+            <!-- Bills of lading -->
+            <TabItem Header="Bills of lading" DataContext="{Binding Bills}">
+                <Grid Margin="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Margin="0,0,8,0">
+                        <WrapPanel DockPanel.Dock="Top">
+                            <TextBlock Style="{StaticResource Label}" Text="House B/L" />
+                            <TextBox Width="120" Text="{Binding NewHouseNo, UpdateSourceTrigger=PropertyChanged}" />
+                            <ComboBox Width="90" Margin="6,0" ItemsSource="{Binding Directions}" SelectedItem="{Binding NewDirection}" />
+                            <Button Content="Create" Command="{Binding CreateCommand}" />
+                            <Button Content="Delete" Command="{Binding DeleteCommand}" />
+                        </WrapPanel>
+                        <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}" />
+                    </DockPanel>
+                    <DockPanel Grid.Column="1">
+                        <WrapPanel DockPanel.Dock="Top">
+                            <TextBlock Style="{StaticResource Label}" Text="Tariff" />
+                            <ComboBox Width="120" ItemsSource="{Binding Tariffs}" DisplayMemberPath="Name" SelectedItem="{Binding Tariff}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  D/O date" />
+                            <DatePicker SelectedDate="{Binding DeliveryOrderDate}" />
+                            <Button Content="Save B/L" Command="{Binding SaveHeaderCommand}" Margin="6,0" />
+                        </WrapPanel>
+                        <WrapPanel DockPanel.Dock="Top" Margin="0,6,0,0">
+                            <TextBlock Style="{StaticResource Label}" Text="Selected container: date" />
+                            <DatePicker SelectedDate="{Binding EventDate}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  Depot" />
+                            <ComboBox Width="130" ItemsSource="{Binding Depots}" DisplayMemberPath="Name" SelectedItem="{Binding Depot}" />
+                            <Button Content="Set discharge" Command="{Binding SetDischargeCommand}" Margin="6,0" />
+                            <Button Content="Record empty return" Command="{Binding RecordEmptyReturnCommand}" />
+                            <Button Content="Clear empty return" Command="{Binding ClearEmptyReturnCommand}" />
+                            <Button Content="Remove from B/L" Command="{Binding RemoveContainerCommand}" />
+                        </WrapPanel>
+                        <DataGrid ItemsSource="{Binding Cycles}" SelectedItem="{Binding SelectedCycle}" />
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Excel -->
+            <TabItem Header="Excel import / export" DataContext="{Binding Import}">
+                <DockPanel Margin="6">
+                    <StackPanel DockPanel.Dock="Top">
+                        <WrapPanel>
+                            <Button Content="Choose workbook…" Command="{Binding BrowseCommand}" />
+                            <TextBlock Style="{StaticResource Label}" Text="{Binding FilePath}" />
+                        </WrapPanel>
+                        <WrapPanel Margin="0,6,0,0">
+                            <TextBlock Style="{StaticResource Label}" Text="Template" />
+                            <ComboBox Width="230" ItemsSource="{Binding TemplateList}" DisplayMemberPath="DisplayName" SelectedItem="{Binding Template}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  Target B/L" />
+                            <ComboBox Width="140" ItemsSource="{Binding Bills}" DisplayMemberPath="Name" SelectedItem="{Binding TargetBl}" />
+                            <CheckBox Content="Backfill historical data" IsChecked="{Binding Backfill}" Margin="12,0" VerticalAlignment="Center"
+                                      ToolTip="Create missing lines, depots, bookings, B/Ls, containers and cycles, and skip the discharge/D-O prerequisite. Every such action is listed as a warning." />
+                            <CheckBox Content="Import valid rows only" IsChecked="{Binding ValidRowsOnly}" VerticalAlignment="Center" />
+                        </WrapPanel>
+                        <WrapPanel Margin="0,6,0,0">
+                            <Button Content="Preview" Command="{Binding PreviewCommand}" />
+                            <Button Content="Import" Command="{Binding ImportCommand}" />
+                            <TextBlock Style="{StaticResource Label}" Text="     Export batch codes (comma separated, empty = all)" />
+                            <TextBox Width="160" Text="{Binding ExportBatchRefs, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Content="Export…" Command="{Binding ExportCommand}" Margin="6,0" />
+                        </WrapPanel>
+                        <TextBlock Text="{Binding Summary}" FontWeight="SemiBold" Margin="0,6,0,0" />
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Results}" />
+                </DockPanel>
+            </TabItem>
+
+            <!-- Tariffs -->
+            <TabItem Header="Demurrage tariffs" DataContext="{Binding Tariffs}">
+                <Grid Margin="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="260" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Margin="0,0,8,0">
+                        <Button DockPanel.Dock="Top" Content="New tariff" Command="{Binding NewCommand}" HorizontalAlignment="Left" />
+                        <ListBox Margin="0,6,0,0" ItemsSource="{Binding Items}" DisplayMemberPath="Name" SelectedItem="{Binding Selected}" />
+                    </DockPanel>
+                    <DockPanel Grid.Column="1">
+                        <WrapPanel DockPanel.Dock="Top">
+                            <TextBlock Style="{StaticResource Label}" Text="Code" />
+                            <TextBox Width="90" Text="{Binding Code}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  Name" />
+                            <TextBox Width="180" Text="{Binding Name}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  Kind" />
+                            <ComboBox Width="140" ItemsSource="{Binding Kinds}" SelectedItem="{Binding Kind}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  Currency" />
+                            <TextBox Width="50" Text="{Binding Currency}" />
+                            <TextBlock Style="{StaticResource Label}" Text="  Free days" />
+                            <TextBox Width="40" Text="{Binding FreeDays}" />
+                            <CheckBox Content="Active" IsChecked="{Binding IsActive}" Margin="8,0" VerticalAlignment="Center" />
+                        </WrapPanel>
+                        <TextBlock DockPanel.Dock="Top" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="DimGray"
+                                   Text="Slabs are day ranges counted from the first day of the period. Leave 'To day' empty on the last slab. Daily rate per equipment class; an empty rate means none is defined (see the 'Rate fallbacks' setting)." />
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,6,0,0">
+                            <Button Content="Add slab" Command="{Binding AddSlabCommand}" />
+                            <Button Content="Save tariff" Command="{Binding SaveCommand}" />
+                            <TextBlock Style="{StaticResource Label}" Text="{Binding Status}" />
+                        </StackPanel>
+                        <DataGrid ItemsSource="{Binding Slabs}" IsReadOnly="False" AutoGenerateColumns="False" x:Name="SlabGrid">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="From day" Binding="{Binding FromDay}" />
+                                <DataGridTextColumn Header="To day" Binding="{Binding ToDay, TargetNullValue=''}" />
+                                <DataGridTextColumn Header="20'" Binding="{Binding Rate20, TargetNullValue=''}" />
+                                <DataGridTextColumn Header="40'" Binding="{Binding Rate40, TargetNullValue=''}" />
+                                <DataGridTextColumn Header="40' HC" Binding="{Binding Rate40HC, TargetNullValue=''}" />
+                                <DataGridTextColumn Header="45'" Binding="{Binding Rate45, TargetNullValue=''}" />
+                                <DataGridTextColumn Header="Reefer" Binding="{Binding RateReefer, TargetNullValue=''}" />
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Remove" Padding="4,0"
+                                                    Command="{Binding DataContext.RemoveSlabCommand, ElementName=SlabGrid}"
+                                                    CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Demurrage and invoices -->
+            <TabItem Header="Demurrage &amp; invoices" DataContext="{Binding Demurrage}">
+                <DockPanel Margin="6">
+                    <WrapPanel DockPanel.Dock="Top">
+                        <TextBlock Style="{StaticResource Label}" Text="B/L" />
+                        <ComboBox Width="140" ItemsSource="{Binding Bills}" DisplayMemberPath="Name" SelectedItem="{Binding Bill}" />
+                        <TextBlock Style="{StaticResource Label}" Text="  As of / invoice date" />
+                        <DatePicker SelectedDate="{Binding AsOf}" />
+                        <Button Content="Calculate" Command="{Binding CalculateCommand}" Margin="6,0" />
+                        <TextBlock Style="{StaticResource Label}" Text="  Bill to" />
+                        <ComboBox Width="200" ItemsSource="{Binding Parties}" DisplayMemberPath="Name" SelectedItem="{Binding Party}" />
+                        <ComboBox Width="70" Margin="6,0" ItemsSource="{Binding Sides}" SelectedItem="{Binding Side}" />
+                        <Button Content="Create draft invoice" Command="{Binding CreateInvoiceCommand}" />
+                    </WrapPanel>
+                    <TextBlock DockPanel.Dock="Top" Margin="0,6,0,0" FontWeight="SemiBold" Text="{Binding Total, StringFormat='Total: {0}'}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <DataGrid ItemsSource="{Binding Rows}" />
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                            <TextBlock Style="{StaticResource Label}" Text="Invoices" FontWeight="SemiBold" />
+                            <Button Content="Finalize" Command="{Binding FinalizeInvoiceCommand}" />
+                            <Button Content="Cancel invoice" Command="{Binding CancelInvoiceCommand}" />
+                        </StackPanel>
+                        <DataGrid Grid.Row="2" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" />
+                    </Grid>
+                </DockPanel>
+            </TabItem>
+
+            <!-- Reference data -->
+            <TabItem Header="Reference data" DataContext="{Binding Reference}">
+                <UniformGrid Columns="3" Margin="6">
+                    <DockPanel Margin="0,0,8,0">
+                        <WrapPanel DockPanel.Dock="Top">
+                            <TextBox Width="60" Text="{Binding PartyCode}" ToolTip="Code" />
+                            <TextBox Width="140" Margin="4,0" Text="{Binding PartyName}" ToolTip="Name (English)" />
+                            <TextBox Width="120" Text="{Binding PartyNameFa}" ToolTip="Name (Farsi)" FlowDirection="RightToLeft" />
+                            <Button Content="Add party" Command="{Binding AddPartyCommand}" Margin="4,0" />
+                        </WrapPanel>
+                        <DataGrid ItemsSource="{Binding Parties}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,8,0">
+                        <WrapPanel DockPanel.Dock="Top">
+                            <TextBox Width="60" Text="{Binding LineCode}" ToolTip="Code" />
+                            <TextBox Width="120" Margin="4,0" Text="{Binding LineName}" ToolTip="Name" />
+                            <TextBox Width="100" Text="{Binding LinePrefixes}" ToolTip="Owner prefixes, e.g. ABCU, ABDU" />
+                            <Button Content="Add line" Command="{Binding AddLineCommand}" Margin="4,0" />
+                        </WrapPanel>
+                        <DataGrid ItemsSource="{Binding Lines}" />
+                    </DockPanel>
+                    <DockPanel>
+                        <WrapPanel DockPanel.Dock="Top">
+                            <TextBox Width="160" Text="{Binding DepotName}" ToolTip="Depot name" />
+                            <Button Content="Add depot" Command="{Binding AddDepotCommand}" Margin="4,0" />
+                        </WrapPanel>
+                        <DataGrid ItemsSource="{Binding Depots}" />
+                    </DockPanel>
+                </UniformGrid>
+            </TabItem>
+
+            <!-- Settings -->
+            <TabItem Header="Settings" DataContext="{Binding Settings}">
+                <DockPanel Margin="6">
+                    <Border DockPanel.Dock="Top" Background="#FFF4CE" BorderBrush="#E0B000" BorderThickness="1" Padding="8">
+                        <TextBlock Text="{Binding AssumptionBanner}" TextWrapping="Wrap" />
+                    </Border>
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,6,0,0">
+                        <Button Content="Save settings" Command="{Binding SaveCommand}" />
+                        <TextBlock Style="{StaticResource Label}" Text="{Binding Status}" />
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,6,0,0">
+                        <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="110" />
+                                            <ColumnDefinition Width="320" />
+                                            <ColumnDefinition Width="260" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Group}" Foreground="DimGray" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Border Background="#E0B000" CornerRadius="3" Padding="4,0" Margin="0,0,6,0"
+                                                    Visibility="{Binding IsAssumption, Converter={StaticResource BoolToVis}}"
+                                                    ToolTip="Default is an assumption, not a confirmed rule">
+                                                <TextBlock Text="⚠ ASSUMPTION" FontSize="10" Foreground="Black" />
+                                            </Border>
+                                            <TextBlock Text="{Binding Label}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <Grid Grid.Column="2">
+                                            <CheckBox IsChecked="{Binding Flag}" Visibility="{Binding IsBool, Converter={StaticResource BoolToVis}}" />
+                                            <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Width="240" HorizontalAlignment="Left">
+                                                <TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsBool}" Value="True">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </Grid>
+                                        <TextBlock Grid.Column="3" TextWrapping="Wrap" Foreground="DimGray">
+                                            <Run Text="{Binding Description, Mode=OneWay}" />
+                                            <Run Text="{Binding Rule, Mode=OneWay, StringFormat=' ({0})'}" />
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>
