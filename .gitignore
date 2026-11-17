@@ -1,6 +1,6 @@
 # --- Clean-room boundary: original artifacts and analysis never enter the repo ---
 *.rar
-/OTMS*.zip
+/*.zip
 /extracted/
 /tools/
 /samples/
