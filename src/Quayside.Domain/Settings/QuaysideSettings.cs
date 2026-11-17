@@ -66,6 +66,12 @@ public sealed class QuaysideSettings
         "BR-D3 / OQ-17", isAssumption: true)]
     public string DemurrageRateFallbacks { get; set; } = "";
 
+    // ---- Finance ----
+    [Setting("Finance", "Currency decimals",
+        "Rounding per currency, e.g. 'IRR=0, JPY=0'. Currencies not listed round to 2 decimals.",
+        "BR-I4 / OQ-20", isAssumption: true)]
+    public string CurrencyDecimals { get; set; } = "IRR=0";
+
     // ---- Display ----
     [Setting("Display", "Show Jalali dates",
         "Display dates in the Persian (Solar Hijri) calendar in addition to Gregorian.", "BR-G4 / OQ-13", isAssumption: false)]
