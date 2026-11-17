@@ -111,7 +111,7 @@ public class FinanceServiceTests
 {
     private static (TestDatabase db, QuaysideDbContext ctx, FinanceService fin, BillOfLading bl, Party party) Setup(DatabaseProvider provider)
     {
-        Skip.If(provider == DatabaseProvider.Postgres && !TestDatabase.PostgresAvailable, "PostgreSQL not configured");
+        TestDatabase.SkipUnlessAvailable(provider);
         var db = TestDatabase.Create(provider);
         var ctx = db.NewContext();
         var party = new Party { Code = "C1", NameEn = "Consignee One", Roles = PartyRole.Client | PartyRole.Consignee };

@@ -11,9 +11,7 @@ public class MigrationTests
 {
     public static TheoryData<DatabaseProvider> Providers => new() { DatabaseProvider.Sqlite, DatabaseProvider.Postgres };
 
-    private static void SkipIfUnavailable(DatabaseProvider p) =>
-        Skip.If(p == DatabaseProvider.Postgres && !TestDatabase.PostgresAvailable,
-            $"PostgreSQL not configured (set {TestDatabase.PgEnv})");
+    private static void SkipIfUnavailable(DatabaseProvider p) => TestDatabase.SkipUnlessAvailable(p);
 
     [SkippableTheory]
     [MemberData(nameof(Providers))]

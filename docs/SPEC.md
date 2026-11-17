@@ -298,3 +298,13 @@ Steps 1–4 are enough to meet the Definition of Done (Excel round-trip). Later 
 - **OQ-23** Report engine licence preference (QuestPDF community licence vs. strictly MIT/Apache components).
 - **OQ-X1** Meaning of the **`Code`** column present in five Excel templates (values such as 114, 3106, 3201, 3202, `32035C`). It is constant within a file and differs across files. It might be a batch/session number, a user code, a voyage/file code or a depot code. **Phase B will import and re-export it verbatim as a batch reference** until clarified.
 - **OQ-X2** The sample workbooks appear to contain real operational data. Confirm they may be used locally for round-trip testing. Synthetic fixtures with the same layout will be committed instead.
+
+## 12. Decisions (product owner, 2026-11-17)
+
+- **OQ-1**: working name "Quayside" accepted for now.
+- **OQ-16 / BR-D2**: day counting is configurable. Default: the day of discharge (or release) counts, both ends are inclusive, and new tariffs start with 0 free days. Flagged as assumptions in Settings.
+- **OQ-17 / BR-D3**: free days, tiered day ranges and per-equipment-class rates (20, 40, 40HC, 45, Reefer) are all configurable per tariff. Which type codes count as reefer or high-cube is a setting. A missing rate is an error unless a fallback is configured.
+- **OQ-21**: SQLite is the default. PostgreSQL is supported through configuration, and migrations are tested against both.
+- **OQ-X1**: the `Code` column is stored as an opaque batch reference and exported back unchanged.
+- **OQ-X2**: the original sample workbooks stay out of the repository. Tests use synthetic fixtures; an optional local test runs against the real samples.
+- Settings whose defaults are not confirmed rules carry an "assumption" flag shown in the UI (OQ-13..OQ-20 related).

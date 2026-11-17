@@ -24,6 +24,15 @@ public sealed class TestDatabase : IDisposable
 
     public static bool PostgresAvailable => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(PgEnv));
 
+    /// <summary>Skips PostgreSQL tests when not configured, unless QUAYSIDE_REQUIRE_PG=1 (CI), where it fails instead.</summary>
+    public static void SkipUnlessAvailable(DatabaseProvider provider)
+    {
+        if (provider != DatabaseProvider.Postgres || PostgresAvailable) return;
+        if (Environment.GetEnvironmentVariable("QUAYSIDE_REQUIRE_PG") == "1")
+            throw new InvalidOperationException($"QUAYSIDE_REQUIRE_PG=1 but {PgEnv} is not set.");
+        Skip.If(true, $"PostgreSQL not configured (set {PgEnv})");
+    }
+
     public static TestDatabase Create(DatabaseProvider provider) => provider switch
     {
         DatabaseProvider.Sqlite => CreateSqlite(),

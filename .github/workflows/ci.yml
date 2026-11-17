@@ -1,0 +1,78 @@
+name: ci
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  QUAYSIDE_REQUIRE_PG: "1"
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Start preinstalled PostgreSQL
+        shell: pwsh
+        run: |
+          $svc = Get-Service -Name "postgresql*" | Select-Object -First 1
+          if (-not $svc) { throw "PostgreSQL service not found on runner image" }
+          Set-Service -InputObject $svc -StartupType Manual
+          Start-Service -InputObject $svc
+          & "$env:PGBIN\pg_isready.exe" -h localhost -p 5432 -t 60
+          # runner image default credentials (postgres/root) - CI only
+          "QUAYSIDE_TEST_PG=Host=localhost;Port=5432;Username=postgres;Password=root;Database=postgres" >> $env:GITHUB_ENV
+
+      - run: dotnet restore Quayside.sln
+      - run: dotnet build Quayside.sln -c Release --no-restore
+      - run: dotnet test Quayside.sln -c Release --no-build --logger trx --results-directory TestResults
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-windows
+          path: TestResults
+
+      - name: Ensure Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+      - name: Package (portable zip + installer)
+        shell: pwsh
+        run: ./build/package.ps1 -Version "0.1.${{ github.run_number }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quayside-windows
+          path: |
+            artifacts/*.zip
+            artifacts/*-setup.exe
+
+  linux-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: quayside
+          POSTGRES_PASSWORD: quayside-ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U quayside" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      QUAYSIDE_TEST_PG: Host=localhost;Port=5432;Username=quayside;Password=quayside-ci;Database=postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet test Quayside.sln -c Release
