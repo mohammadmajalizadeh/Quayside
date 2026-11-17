@@ -130,3 +130,19 @@ container has a discharge date and the B/L has a D/O date, and not if a return d
 The original exports are generic grid dumps. For Phase B, "export them back without losing data"
 is defined as: **exporting a template writes the same headers, column order and values**, so that
 re-importing yields identical records (see SPEC §7).
+
+---
+
+## Implementation notes (Phase B)
+
+- Import and export share one column table (`src/Quayside.Excel/Templates.cs`). Exports write the exact
+  header text (including the trailing space in `CNTR `), column order, sheet names (`Sheet1`, plus empty
+  `Sheet2`/`Sheet3` for the B/L container list), and per-column formats: real dates as `m/d/yyyy` or
+  `mm-dd-yy`, and text dates as `yyyy/MM/dd` for the full-return-attach template. Numeric codes stay numeric.
+- "Without losing data" is checked **semantically**: re-reading the export yields the same values as the
+  source. Two normalisations are intentional. Container numbers are written canonically (`ABCU1234567`,
+  no dash, upper case), and text cells are trimmed (e.g. a seal of `" -"` becomes `"-"`).
+- The `Code` column is stored as an opaque batch reference per event and is used to export the same batch back.
+- **Backfill mode** creates missing lines, depots, body states, bookings, B/Ls, containers and cycles, and skips
+  the empty-return prerequisites (BR-L2). Every such action is a row warning. Without backfill, missing references are errors.
+- Import is a preview unless committed, and all-or-nothing unless "import valid rows only" is chosen.

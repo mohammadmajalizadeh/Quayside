@@ -25,7 +25,6 @@ public class LifecycleRulesTests
         LifecycleRules.RecordFullReturn(c, D5);
         Assert.Equal(D1, c.ReleasedToShipperOn);
         Assert.Equal(D5, c.FullReturnedOn);
-        Assert.True(c.IsFull);
     }
 
     [Fact]

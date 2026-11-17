@@ -28,7 +28,6 @@ public static class LifecycleRules
         if (cycle.ReleasedToShipperOn is { } rts)
             Require(on >= rts, "BR-L1", $"Full-return date {on:yyyy-MM-dd} is before the release date {rts:yyyy-MM-dd}.");
         cycle.FullReturnedOn = on;
-        cycle.IsFull = true;
     }
 
     /// <summary>MT.RTN: importer returns the empty box to a depot.</summary>
@@ -64,7 +63,6 @@ public static class LifecycleRules
         cycle.EmptyReturnDepotId = depot?.Id;
         cycle.EmptyReturnBodyState = bodyState;
         cycle.EmptyReturnBodyStateId = bodyState?.Id;
-        cycle.IsFull = false;
     }
 
     public static void ClearFullReturn(ContainerCycle cycle, bool coveredByDemurrageInvoice)
