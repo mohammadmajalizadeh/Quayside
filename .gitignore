@@ -1,0 +1,39 @@
+# --- Clean-room boundary: original artifacts and analysis never enter the repo ---
+*.rar
+/OTMS*.zip
+/extracted/
+/tools/
+/samples/
+docs/DATA_MODEL.md
+docs/DATA_MODEL_APPENDIX.md
+docs/SECURITY_NOTES.md
+
+# --- .NET ---
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.rsuser
+.vs/
+.vscode/
+.idea/
+*.swp
+TestResults/
+coverage*/
+*.trx
+
+# --- Local data / secrets ---
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+appsettings.Local.json
+.env
+.env.*
+
+# --- Packaging output ---
+/artifacts/
+/publish/
+installer/Output/
